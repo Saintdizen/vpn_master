@@ -1,4 +1,4 @@
-# Media Maze
+# VPN Master
 ### CHROME_SANDBOX FIX
 ```shell
 cd node_modules/electron/dist

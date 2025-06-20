@@ -1,8 +1,8 @@
 {
-  "name": "media-maze",
-  "productName": "Media Maze",
-  "description": "Media Maze",
-  "version": "0.8.1",
+  "name": "vpn-master",
+  "productName": "VPN Master",
+  "description": "VPN Master",
+  "version": "0.0.1",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Saintdizen/media_maze.git"
+    "url": "https://github.com/Saintdizen/vpn_master.git"
   },
   "keywords": [
-    "Media"
+    "Tools"
   ],
   "build": {
     "asar": false,
@@ -25,11 +25,11 @@
       "provider": "github",
       "owner": "saintdizen",
       "private": false,
-      "repo": "media_maze",
+      "repo": "vpn_master",
       "releaseType": "release"
     },
     "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
-    "appId": "com.media.maze",
+    "appId": "com.vpn.master",
     "linux": {
       "category": "AudioVideo",
       "target": [
@@ -71,17 +71,13 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Saintdizen/media_maze/issues"
+    "url": "https://github.com/Saintdizen/vpn_master/issues"
   },
-  "homepage": "https://github.com/Saintdizen/media_maze#readme",
+  "homepage": "https://github.com/Saintdizen/vpn_master#readme",
   "devDependencies": {
     "electron-builder": "~24.6.4"
   },
   "dependencies": {
-    "axios": "^1.6.8",
-    "chuijs": "~3.5.0",
-    "electron-download-manager": "^2.1.2",
-    "request": "2.88.2",
-    "sqlite3": "5.1.6"
+    "chuijs": "~3.5.0"
   }
 }
