@@ -11,7 +11,7 @@ const main = new Main({
     },
     minHeight: 540,
     minWidth: 960,
-    icon: `${__dirname}/resources/icons/app/icon.png`,
+    // icon: `${__dirname}/resources/icons/app/icon.png`,
     render: `${__dirname}/app/app.js`,
     devTools: false,
     resizable: true,
