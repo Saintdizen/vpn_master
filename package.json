@@ -1,0 +1,87 @@
+{
+  "name": "media-maze",
+  "productName": "Media Maze",
+  "description": "Media Maze",
+  "version": "0.8.1",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "debs": "npm install --save --legacy-peer-deps --force",
+    "postinstall": "electron-builder install-app-deps",
+    "linux": "electron-builder --linux --publish always",
+    "win": "electron-builder --win --publish always",
+    "mac": "electron-builder --mac --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Saintdizen/media_maze.git"
+  },
+  "keywords": [
+    "Media"
+  ],
+  "build": {
+    "asar": false,
+    "publish": {
+      "provider": "github",
+      "owner": "saintdizen",
+      "private": false,
+      "repo": "media_maze",
+      "releaseType": "release"
+    },
+    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
+    "appId": "com.media.maze",
+    "linux": {
+      "category": "AudioVideo",
+      "target": [
+        "AppImage"
+      ]
+    },
+    "win": {
+      "icon": "resources/icons/app/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerHeaderIcon": "resources/icons/app/icon.ico",
+      "installerIcon": "resources/icons/app/icon.ico"
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "resources/**/*",
+      "app/**/*"
+    ]
+  },
+  "author": {
+    "name": "Chuvakhin Ivan",
+    "email": "saintdizen@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Saintdizen/media_maze/issues"
+  },
+  "homepage": "https://github.com/Saintdizen/media_maze#readme",
+  "devDependencies": {
+    "electron-builder": "~24.6.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "chuijs": "~3.5.0",
+    "electron-download-manager": "^2.1.2",
+    "request": "2.88.2",
+    "sqlite3": "5.1.6"
+  }
+}
