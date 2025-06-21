@@ -1,5 +1,5 @@
 const { spawn} = require('child_process');
-const {Log} = require("chuijs");
+const {Log, Notification, Paragraph} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -7,7 +7,8 @@ class OpenConnect {
     #user_password = undefined
     #user_cert = undefined
     #cert_password = undefined
-    constructor(options = {
+    #console = undefined
+    constructor(console, options = {
         gate: undefined,
         user: {
             login: undefined,
@@ -18,14 +19,15 @@ class OpenConnect {
             password: undefined,
         }
     }) {
+        this.#console = console
         this.#gate = options.gate
         this.#user_login = options.user.login
         this.#user_password = options.user.password
         this.#user_cert = options.cert.pfx
         this.#cert_password = options.cert.password
     }
-    start() {
-        this.#vpnProcess = spawn('sudo', [
+    start(adminPassword) {
+        this.#vpnProcess = spawn('pkexec', [
             'openconnect',
             '--protocol=fortinet',
             '-u', this.#user_login,
@@ -34,14 +36,29 @@ class OpenConnect {
             '--no-dtls'
         ]);
 
+        Log.info(this.#vpnProcess.pid)
+
+
+        this.#vpnProcess.stdin.write(`${adminPassword}\n`)
 
         // Handle output and errors
         this.#vpnProcess.stdout.on('data', (data) => {
             Log.info(`OpenConnect stdout: ${data}`)
+            this.#console.add(new Paragraph(data))
+
+
+            if (data.includes("Using vhost-net for tun acceleration")) {
+                new Notification({title: "Подключение", text: "Установлено"}).show(true)
+            }
+
+            if (data.includes("Logout successful.")) {
+                new Notification({title: "Подключение", text: "Остановлено"}).show(true)
+            }
         });
 
         this.#vpnProcess.stderr.on('data', (data) => {
             Log.error(`OpenConnect stderr: ${data}`)
+            this.#console.add(new Paragraph(data))
 
             if (data.includes('Enter PKCS#12 pass phrase:')) {
                 this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
@@ -57,11 +74,15 @@ class OpenConnect {
         });
 
         this.#vpnProcess.on('close', (code) => {
+            this.#console.add(new Paragraph(`OpenConnect process exited with code ${code}`))
             Log.info(`OpenConnect process exited with code ${code}`)
         });
     }
     exit() {
-        this.#vpnProcess.kill();
+        spawn('kill', [`${this.#vpnProcess.pid}`]);
+
+
+        // this.#vpnProcess.kill();
     }
 }
 
