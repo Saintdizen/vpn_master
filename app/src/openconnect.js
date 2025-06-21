@@ -1,5 +1,5 @@
-const { spawn} = require('child_process');
-const {Log, Notification, Paragraph} = require("chuijs");
+const { spawn, exec, execSync} = require('child_process');
+const {Log, Notification, Paragraph, shell} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -27,19 +27,23 @@ class OpenConnect {
         this.#cert_password = options.cert.password
     }
     start(adminPassword) {
-        this.#vpnProcess = spawn('pkexec', [
-            'openconnect',
-            '--protocol=fortinet',
-            '-u', this.#user_login,
-            '-c', this.#user_cert,
-            this.#gate,
-            '--no-dtls'
-        ]);
+        let ds= `echo '${adminPassword}' | sudo -S openconnect --protocol=fortinet -u ${this.#user_login} -c ${this.#user_cert} ${this.#gate} --no-dtls`
+
+
+        // this.#vpnProcess = spawn('pkexec', [
+        //     'openconnect',
+        //     '--protocol=fortinet',
+        //     '-u', this.#user_login,
+        //     '-c', this.#user_cert,
+        //     this.#gate,
+        //     '--no-dtls'
+        // ]);
+
+        this.#vpnProcess = spawn(ds, {
+            shell: false
+        });
 
         Log.info(this.#vpnProcess.pid)
-
-
-        this.#vpnProcess.stdin.write(`${adminPassword}\n`)
 
         // Handle output and errors
         this.#vpnProcess.stdout.on('data', (data) => {
@@ -61,6 +65,7 @@ class OpenConnect {
             this.#console.add(new Paragraph(data))
 
             if (data.includes('Enter PKCS#12 pass phrase:')) {
+                // this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
                 this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
             }
 
