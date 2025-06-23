@@ -17,7 +17,7 @@
     "url": "https://github.com/Saintdizen/vpn_master.git"
   },
   "keywords": [
-    "Tools"
+    "Tools", "VPN"
   ],
   "build": {
     "asar": false,
