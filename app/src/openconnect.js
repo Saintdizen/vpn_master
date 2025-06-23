@@ -1,5 +1,5 @@
-const { spawn, exec, execSync} = require('child_process');
-const {Log, Notification, Paragraph, shell} = require("chuijs");
+const { spawn} = require('child_process');
+const {Log, Notification, Paragraph, shell, path} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -27,8 +27,8 @@ class OpenConnect {
         this.#cert_password = options.cert.password
     }
     start(adminPassword) {
-        let ds= `echo '${adminPassword}' | sudo -S openconnect --protocol=fortinet -u ${this.#user_login} -c ${this.#user_cert} ${this.#gate} --no-dtls`
-
+        let ds= `cd ${path.join(__dirname)} && chmod +x ./vpn_on.sh && echo '${adminPassword}' | sudo -S ./vpn_on.sh ${this.#gate} ${this.#user_login}`
+        this.#vpnProcess = spawn(ds, { shell: true });
 
         // this.#vpnProcess = spawn('pkexec', [
         //     'openconnect',
@@ -38,10 +38,6 @@ class OpenConnect {
         //     this.#gate,
         //     '--no-dtls'
         // ]);
-
-        this.#vpnProcess = spawn(ds, {
-            shell: false
-        });
 
         Log.info(this.#vpnProcess.pid)
 
@@ -64,18 +60,18 @@ class OpenConnect {
             Log.error(`OpenConnect stderr: ${data}`)
             this.#console.add(new Paragraph(data))
 
-            if (data.includes('Enter PKCS#12 pass phrase:')) {
-                // this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
-                this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
-            }
-
-            if (data.includes("Enter 'yes' to accept, 'no' to abort; anything else to view:")) {
-                this.#vpnProcess.stdin.write(`yes\n`);
-            }
-
-            if (data.includes('Password:')) {
-                this.#vpnProcess.stdin.write(`${this.#user_password}\n`);
-            }
+            // if (data.includes('Enter PKCS#12 pass phrase:')) {
+            //     // this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
+            //     this.#vpnProcess.stdin.write(`${this.#cert_password}\n`);
+            // }
+            //
+            // if (data.includes("Enter 'yes' to accept, 'no' to abort; anything else to view:")) {
+            //     this.#vpnProcess.stdin.write(`yes\n`);
+            // }
+            //
+            // if (data.includes('Password:')) {
+            //     this.#vpnProcess.stdin.write(`${this.#user_password}\n`);
+            // }
         });
 
         this.#vpnProcess.on('close', (code) => {
@@ -84,10 +80,7 @@ class OpenConnect {
         });
     }
     exit() {
-        spawn('kill', [`${this.#vpnProcess.pid}`]);
-
-
-        // this.#vpnProcess.kill();
+        this.#vpnProcess.kill();
     }
 }
 
