@@ -60,7 +60,7 @@ expect eof`
         if (!fs.existsSync(path_scripts)) {
             fs.mkdirSync(path_scripts, { recursive: true });
             fs.writeFileSync(path_script, test, "utf-8");
-            let set_permission= `cd ${path_scripts} && chmod +x spawn_openconnect.sh`
+            let set_permission= `cd '${path_scripts}' && chmod +x spawn_openconnect.sh`
             spawn(set_permission, { shell: true });
             Log.info(`Файл '${path_script}' успешно создан`)
         } else {
@@ -72,7 +72,7 @@ expect eof`
     start() {
         let pathz = this.createFileSH()
 
-        let open_con= `cd ${pathz} && echo '${this.#admin_password}' | sudo -S ./spawn_openconnect.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
+        let open_con= `cd '${pathz}' && echo '${this.#admin_password}' | sudo -S ./spawn_openconnect.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
         this.#vpnProcess = spawn(open_con, { shell: true });
         Log.info(`Main PID: ${this.#vpnProcess.pid}`)
 
