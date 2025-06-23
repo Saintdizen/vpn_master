@@ -1,5 +1,5 @@
 const { spawn} = require('child_process');
-const {Log, Notification, Paragraph, shell, path} = require("chuijs");
+const {Log, Notification, Paragraph, shell, path, App, fs} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -30,8 +30,49 @@ class OpenConnect {
         this.#cert_password = options.cert.password
         this.#admin_password = options.adminPassword
     }
+    createFileSH() {
+        let test = `#!/usr/bin/expect -f
+
+set timeout -1
+set gate [lindex $argv 0];
+set user [lindex $argv 1];
+set password [lindex $argv 2];
+set pfx [lindex $argv 3];
+set pass_phrase [lindex $argv 4];
+
+spawn sudo openconnect --protocol=fortinet -u $user -c $pfx $gate --no-dtls
+set bash_pid [exp_pid]
+puts "Spawn PID: $bash_pid"
+
+expect "Enter PKCS#12 pass phrase:"
+send -- "$pass_phrase\\r"
+
+expect "Enter 'yes' to accept, 'no' to abort; anything else to view: "
+send -- "yes\\r"
+
+expect "Password: "
+send -- "$password\\r"
+
+expect eof`
+
+        let path_scripts = path.join(App.userDataPath(), "scripts")
+        let path_script = path.join(path_scripts, "spawn_openconnect")
+        if (!fs.existsSync(path_scripts)) {
+            fs.mkdirSync(path_scripts, { recursive: true });
+            fs.writeFileSync(path_script, test, "utf-8");
+            let set_permission= `cd ${path_scripts} && chmod +x spawn_openconnect`
+            spawn(set_permission, { shell: true });
+            Log.info(`Файл '${path_script}' успешно создан`)
+        } else {
+            Log.info(`Файл '${path_script}' уже существует`)
+        }
+        return path_scripts
+    }
+
     start() {
-        let open_con= `cd ${path.join(__dirname)} && echo '${this.#admin_password}' | sudo -S ./vpn_on.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
+        let pathz = this.createFileSH()
+
+        let open_con= `cd ${pathz} && echo '${this.#admin_password}' | sudo -S ./spawn_openconnect '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
         this.#vpnProcess = spawn(open_con, { shell: true });
         Log.info(`Main PID: ${this.#vpnProcess.pid}`)
 
