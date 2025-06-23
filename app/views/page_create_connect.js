@@ -1,5 +1,6 @@
-const {Page, ContentBlock, Styles, FileInput, TextInput, Button, Notification, PasswordInput} = require('chuijs');
+const {Page, ContentBlock, Styles, FileInput, TextInput, Button, Notification, PasswordInput, Route} = require('chuijs');
 const {AddConnection} = require("../src/settings");
+const {ConnectPage} = require("./page_connect");
 
 class CreateConnectPage extends Page {
     #block_main = new ContentBlock({
@@ -48,6 +49,8 @@ class CreateConnectPage extends Page {
             )
 
             new Notification({title: "Подключение", text: "Успешно создано"}).show(true)
+
+            new Route().go(new ConnectPage())
         })
         this.add(this.#block_main)
     }

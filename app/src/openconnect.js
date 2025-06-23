@@ -31,7 +31,7 @@ class OpenConnect {
         this.#admin_password = options.adminPassword
     }
     start() {
-        let open_con= `cd ${path.join(__dirname)} && chmod +x ./vpn_on.sh && echo '${this.#admin_password}' | sudo -S ./vpn_on.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
+        let open_con= `cd ${path.join(__dirname)} && echo '${this.#admin_password}' | sudo -S ./vpn_on.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
         this.#vpnProcess = spawn(open_con, { shell: true });
         Log.info(`Main PID: ${this.#vpnProcess.pid}`)
 
