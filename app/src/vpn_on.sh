@@ -1,27 +1,23 @@
 #!/usr/bin/expect -f
 
 set timeout -1
-# set gate $1
-# set user $2
-# set password $3
-# set pfx $4
-# set pass_phrase $5
+set gate [lindex $argv 0];
+set user [lindex $argv 1];
+set password [lindex $argv 2];
+set pfx [lindex $argv 3];
+set pass_phrase [lindex $argv 4];
 
-spawn sudo openconnect --protocol=fortinet -u $2 -c $4 $1 --no-dtls
-
-puts $1
-puts $2
-puts $3
-puts $4
-puts $5
+spawn sudo openconnect --protocol=fortinet -u $user -c $pfx $gate --no-dtls
+set bash_pid [exp_pid]
+puts "Spawn PID: $bash_pid"
 
 expect "Enter PKCS#12 pass phrase:"
-send -- "$5\r"
+send -- "$pass_phrase\r"
 
 expect "Enter 'yes' to accept, 'no' to abort; anything else to view: "
 send -- "yes\r"
 
 expect "Password: "
-send -- "$3\r"
+send -- "$password\r"
 
 expect eof

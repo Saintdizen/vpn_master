@@ -45,6 +45,7 @@ class ConnectPage extends Page {
 
         connect.addClickListener(() => {
             this.#connect = new OpenConnect(this.#block_console, {
+                adminPassword: admin_password.getValue(),
                 gate: this.#conn.getGate(),
                 user: {
                     login: this.#conn.getUserLogin(),
@@ -55,7 +56,7 @@ class ConnectPage extends Page {
                     password: this.#conn.getCertPassword()
                 },
             })
-            this.#connect.start(admin_password.getValue())
+            this.#connect.start()
 
             this.#block_main.remove(connect)
             this.#block_main.add(disconnect)
