@@ -1,4 +1,4 @@
-const {Page, ContentBlock, Styles, FileInput, TextInput, Button, Notification} = require('chuijs');
+const {Page, ContentBlock, Styles, FileInput, TextInput, Button, Notification, PasswordInput} = require('chuijs');
 const {AddConnection} = require("../src/settings");
 
 class CreateConnectPage extends Page {
@@ -28,10 +28,10 @@ class CreateConnectPage extends Page {
 
         let gate = new TextInput({title: "Шлюз", width: "480px"})
         let user_login = new TextInput({title: "Имя пользователя", width: "480px"})
-        let user_password = new TextInput({title: "Пароль", width: "480px"})
+        let user_password = new PasswordInput({title: "Пароль", width: "480px"})
 
         let cert = new FileInput({ title: "Сертификат", multiple: false })
-        let cert_password = new TextInput({title: "Пароль от сетификата", width: "480px"})
+        let cert_password = new PasswordInput({title: "Пароль от сетификата", width: "480px"})
 
         let create = new Button({ title: "Создать" })
 
