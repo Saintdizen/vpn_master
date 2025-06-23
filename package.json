@@ -31,7 +31,7 @@
     "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
     "appId": "com.vpn.master",
     "linux": {
-      "category": "AudioVideo",
+      "category": "Tools",
       "target": [
         "AppImage"
       ]
