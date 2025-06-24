@@ -1,6 +1,7 @@
-const {Page, ContentBlock, Styles, Button, Notification, Dialog, TextInput, PasswordInput, App} = require('chuijs');
+const {Page, ContentBlock, Styles, Button, Dialog, PasswordInput, Route} = require('chuijs');
 const {OpenConnect} = require("../src/openconnect");
 const {AddConnection} = require("../src/settings");
+const {EditConnectPage} = require("./page_edit_connect");
 
 class ConnectPage extends Page {
     #block_main = new ContentBlock({
@@ -30,6 +31,7 @@ class ConnectPage extends Page {
         this.#block_main.setHeight(Styles.SIZE.WEBKIT_FILL);
 
         let admin_password = new PasswordInput({title: "Пароль", width: "480px"})
+        let edit_conn = new Button({ title: "Изменить подключение", clickEvent: () => new Route().go(new EditConnectPage(this)) })
         let connect = new Button({ title: "Подключиться" })
         let disconnect = new Button({ title: "Отключиться" })
         let console = new Button({ title: "Консоль", clickEvent: () => this.#console.open()})
@@ -38,7 +40,7 @@ class ConnectPage extends Page {
         this.#console.addToHeader(console_close)
         this.#console.addToBody(this.#block_console)
 
-        this.#block_main.add(admin_password, console)
+        this.#block_main.add(edit_conn, admin_password, console)
         this.#block_main.add(connect)
 
         this.add(this.#block_main, this.#console)

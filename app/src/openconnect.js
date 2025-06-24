@@ -1,5 +1,5 @@
 const { spawn} = require('child_process');
-const {Log, Notification, Paragraph, shell, path, App, fs} = require("chuijs");
+const {Log, Notification, Paragraph, path, App, fs} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -71,6 +71,8 @@ expect eof`
 
     start() {
         let pathz = this.createFileSH()
+
+        Log.info(this.#admin_password)
 
         let open_con= `cd '${pathz}' && echo '${this.#admin_password}' | sudo -S ./spawn_openconnect.sh '${this.#gate}' '${this.#user_login}' '${this.#user_password}' '${this.#user_cert}' '${this.#cert_password}'`
         this.#vpnProcess = spawn(open_con, { shell: true });

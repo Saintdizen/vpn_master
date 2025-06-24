@@ -14,7 +14,7 @@ class Apps extends AppLayout {
             } else {
                 new Route().go(new ConnectPage())
             }
-        }, 500)
+        }, 250)
     }
 }
 
