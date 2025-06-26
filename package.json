@@ -2,7 +2,7 @@
   "name": "vpn-master",
   "productName": "VPN Master",
   "description": "VPN Master",
-  "version": "0.0.6",
+  "version": "0.0.1",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
@@ -35,25 +35,6 @@
       "target": [
         "AppImage"
       ]
-    },
-    "win": {
-      "icon": "resources/icons/app/icon.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "deleteAppDataOnUninstall": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "installerHeaderIcon": "resources/icons/app/icon.ico",
-      "installerIcon": "resources/icons/app/icon.ico"
     },
     "directories": {
       "buildResources": "resources",
