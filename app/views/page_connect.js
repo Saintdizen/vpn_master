@@ -12,7 +12,7 @@ class ConnectPage extends Page {
     });
     #connect = undefined
     #conn = new AddConnection()
-    #console_dialog = new Dialog({width: "90%", height: "70%"})
+    #console_dialog = new Dialog({width: "80%", height: "60%", closeOutSideClick: true})
     #console = new Console({width: Styles.SIZE.WEBKIT_FILL, height: Styles.SIZE.WEBKIT_FILL})
     constructor() {
         super();
@@ -30,9 +30,7 @@ class ConnectPage extends Page {
         let connect = new Button({ title: "Подключиться" })
         let disconnect = new Button({ title: "Отключиться" })
         let console = new Button({ title: "Консоль", clickEvent: () => this.#console_dialog.open()})
-        let console_close = new Button({ title: "Закрыть", clickEvent: () => this.#console_dialog.close()})
 
-        this.#console_dialog.addToHeader(console_close)
         this.#console_dialog.addToBody(this.#console)
 
         this.#block_main.add(edit_conn, admin_password, console)
