@@ -1,4 +1,4 @@
-const {Page, ContentBlock, Styles, Button, Dialog, PasswordInput, Route} = require('chuijs');
+const {Page, ContentBlock, Styles, Button, Dialog, PasswordInput, Route, Console} = require('chuijs');
 const {OpenConnect} = require("../src/openconnect");
 const {AddConnection} = require("../src/settings");
 const {EditConnectPage} = require("./page_edit_connect");
@@ -12,13 +12,8 @@ class ConnectPage extends Page {
     });
     #connect = undefined
     #conn = new AddConnection()
-    #console = new Dialog({width: "80%", height: "80%"})
-    #block_console = new ContentBlock({
-        direction: Styles.DIRECTION.COLUMN,
-        // wrap: Styles.WRAP.NOWRAP,
-        // align: Styles.ALIGN.CENTER,
-        // justify: Styles.JUSTIFY.CENTER
-    });
+    #console_dialog = new Dialog({width: "90%", height: "70%"})
+    #console = new Console({width: Styles.SIZE.WEBKIT_FILL, height: Styles.SIZE.WEBKIT_FILL})
     constructor() {
         super();
         this.setTitle('Подключение к FORTIGATE');
@@ -34,19 +29,19 @@ class ConnectPage extends Page {
         let edit_conn = new Button({ title: "Изменить подключение", clickEvent: () => new Route().go(new EditConnectPage(this)) })
         let connect = new Button({ title: "Подключиться" })
         let disconnect = new Button({ title: "Отключиться" })
-        let console = new Button({ title: "Консоль", clickEvent: () => this.#console.open()})
-        let console_close = new Button({ title: "Закрыть", clickEvent: () => this.#console.close()})
+        let console = new Button({ title: "Консоль", clickEvent: () => this.#console_dialog.open()})
+        let console_close = new Button({ title: "Закрыть", clickEvent: () => this.#console_dialog.close()})
 
-        this.#console.addToHeader(console_close)
-        this.#console.addToBody(this.#block_console)
+        this.#console_dialog.addToHeader(console_close)
+        this.#console_dialog.addToBody(this.#console)
 
         this.#block_main.add(edit_conn, admin_password, console)
         this.#block_main.add(connect)
 
-        this.add(this.#block_main, this.#console)
+        this.add(this.#block_main, this.#console_dialog)
 
         connect.addClickListener(() => {
-            this.#connect = new OpenConnect(this.#block_console, {
+            this.#connect = new OpenConnect(this.#console, {
                 adminPassword: admin_password.getValue(),
                 gate: this.#conn.getGate(),
                 user: {

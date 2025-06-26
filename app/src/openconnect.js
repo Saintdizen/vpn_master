@@ -1,5 +1,5 @@
 const { spawn} = require('child_process');
-const {Log, Notification, Paragraph, path, App, fs} = require("chuijs");
+const {Log, Notification, path, App, fs} = require("chuijs");
 class OpenConnect {
     #vpnProcess = undefined
     #gate = undefined
@@ -81,7 +81,7 @@ expect eof`
         // Handle output and errors
         this.#vpnProcess.stdout.on('data', (data) => {
             Log.info(`OpenConnect stdout: ${data}`)
-            this.#console.add(new Paragraph(data))
+            this.#console.addText(data)
 
 
             if (data.includes("Using vhost-net for tun acceleration")) {
@@ -101,11 +101,11 @@ expect eof`
 
         this.#vpnProcess.stderr.on('data', (data) => {
             Log.error(`OpenConnect stderr: ${data}`)
-            this.#console.add(new Paragraph(data))
+            this.#console.addText(data)
         });
 
         this.#vpnProcess.on('close', (code) => {
-            this.#console.add(new Paragraph(`OpenConnect process exited with code ${code}`))
+            this.#console.addText(`OpenConnect process exited with code ${code}`)
             Log.info(`OpenConnect process exited with code ${code}`)
             new Notification({title: "Подключение", text: "Остановлено"}).show(true)
         });
